@@ -1,6 +1,6 @@
 import {Command} from "https://deno.land/x/cliffy@v0.25.7/command/mod.ts";
 import "./subcommand/auth.ts";
-import "./browser/jobcan.ts";
+import "./lib/browser/jobcan.ts";
 
 if (import.meta.main) {
   await new Command()

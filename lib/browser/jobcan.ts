@@ -1,6 +1,6 @@
 import puppeteer, {Page} from "puppeteer";
 import {ResultAsync} from "neverthrow";
-import {Credential} from "../auth/credential.ts";
+import {Credential} from "../../auth/credential.ts";
 
 const LOGIN_PAGE_URL = "https://id.jobcan.jp/users/sign_in";
 const PROFILE_PAGE_URL = "https://id.jobcan.jp/account/profile";
