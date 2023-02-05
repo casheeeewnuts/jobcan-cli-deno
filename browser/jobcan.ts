@@ -1,5 +1,5 @@
-import puppeteer, {Page} from "https://deno.land/x/puppeteer@16.2.0/mod.ts";
-import {ResultAsync} from "npm:neverthrow@6.0.0";
+import puppeteer, {Page} from "puppeteer";
+import {ResultAsync} from "neverthrow";
 import {Credential} from "../auth/credential.ts";
 
 const LOGIN_PAGE_URL = "https://id.jobcan.jp/users/sign_in";

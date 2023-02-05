@@ -1,5 +1,5 @@
 import {z} from "https://deno.land/x/zod@v3.20.2/mod.ts"
-import {ResultAsync} from "npm:neverthrow@6.0.0";
+import {ResultAsync} from "neverthrow";
 
 const CredentialSchema = z.object({
   email: z.string().email(),

@@ -1,8 +1,7 @@
-import {ensureDir} from "https://deno.land/std@0.170.0/fs/ensure_dir.ts";
+import {ensureDir} from "https://deno.land/std@0.170.0/fs/mod.ts";
 import * as path from "https://deno.land/std@0.170.0/path/mod.ts";
+import {Input, Secret} from "https://deno.land/x/cliffy@v0.25.7/prompt/mod.ts";
 import {readCredential, writeCredential} from "./credential.ts";
-import {Input} from "https://deno.land/x/cliffy@v0.25.7/prompt/input.ts";
-import {Secret} from "https://deno.land/x/cliffy@v0.25.7/prompt/secret.ts";
 
 export async function configure(configPath: string) {
   await ensureDir(path.dirname(configPath))
