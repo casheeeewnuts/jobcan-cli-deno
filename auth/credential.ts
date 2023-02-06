@@ -1,5 +1,5 @@
-import {z} from "https://deno.land/x/zod@v3.20.2/mod.ts"
-import {ResultAsync} from "neverthrow";
+import {z, ZodError} from "https://deno.land/x/zod@v3.20.2/mod.ts"
+import {ResultAsync, ok, err} from "neverthrow";
 
 const CredentialSchema = z.object({
   email: z.string().email(),
@@ -15,8 +15,26 @@ export function readCredential(storePath: string): ResultAsync<Credential, strin
     }
 
     return "Caught null or undefined"
-  }).map(JSON.parse)
-    .map(CredentialSchema.parse)
+  }).andThen(rawText => {
+    try {
+      return ok(JSON.parse(rawText))
+    } catch (e) {
+      return err(e ? e.toString() : "Caught null or undefined")
+    }
+  })
+    .andThen(maybeCredential => {
+      try {
+        return ok(CredentialSchema.parse(maybeCredential))
+      } catch (e) {
+        if (e instanceof ZodError) {
+          return err(e.format())
+        } else if (e) {
+          return err(e.toString())
+        } else {
+          return err("Caught null or undefined")
+        }
+      }
+    })
 }
 
 export function writeCredential(credential: Credential, path: string): ResultAsync<void, string> {
