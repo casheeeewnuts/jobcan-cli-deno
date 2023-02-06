@@ -11,5 +11,5 @@ export async function show(configFilePath: string) {
 }
 
 function mask(str: string): string {
-  return [...str].map(() => "*").join("")
+  return "*".repeat(str.length)
 }
