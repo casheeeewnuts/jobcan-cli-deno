@@ -1,0 +1,6 @@
+{
+  "tasks": {
+    "build": "deno compile main.ts"
+  },
+  "importMap": "import_map.json"
+}

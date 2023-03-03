@@ -6,9 +6,9 @@ if (import.meta.main) {
   await new Command()
     .name("jobcan-cli")
     .version("0.0.1")
-    .description("CommandLine tool for automate routine at JobCan")
+    .description("CommandLine tool for automate routine in JobCan")
     .command("auth [operation]", "configure authentication").executable()
     .command("timestamp [operation]", "execute timestamping ").executable()
-    .command("manhour [operation]", "input man-hour").executable()
+    .command("man-hour", "input man-hour").executable()
     .parse(Deno.args);
 }

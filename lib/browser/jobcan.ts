@@ -1,19 +1,26 @@
-import puppeteer, {Page} from "puppeteer";
+import puppeteer, {Page, Browser} from "puppeteer";
 import {ResultAsync} from "neverthrow";
 import {Credential} from "../../auth/credential.ts";
 
 const LOGIN_PAGE_URL = "https://id.jobcan.jp/users/sign_in";
 const PROFILE_PAGE_URL = "https://id.jobcan.jp/account/profile";
-const TIMESTAMP_URL = "https://ssl.jobcan.jp/jbcoauth/login"
+export const TIMESTAMP_URL = "https://ssl.jobcan.jp/jbcoauth/login"
 
-export const BROWSER = await puppeteer.launch({
-  headless: false
-});
+export let BROWSER: Browser;
 
+async function getBrowser() {
+  if (!BROWSER) {
+    BROWSER = await puppeteer.launch()
+  }
+
+  return BROWSER
+}
 
 export function login(credential: Credential): ResultAsync<Page, string> {
+
   const task = async () => {
-    const page = await BROWSER.newPage()
+    const browser = await getBrowser()
+    const page = await browser.newPage()
 
     await page.goto(LOGIN_PAGE_URL, {waitUntil: "domcontentloaded"})
     await page.type("#user_email", credential.email)
@@ -26,42 +33,15 @@ export function login(credential: Credential): ResultAsync<Page, string> {
     if (page.url() != PROFILE_PAGE_URL) {
       await page.browser().close()
 
-      throw new Error("Failed to login. Please check your credential. execute next subcommand")
+      throw new Error("Failed to login. Please check your credential")
     }
 
     return page
   }
 
   return ResultAsync.fromPromise(task(), e => {
-    if (e != null) {
-      console.error(e.toString())
-    } else {
-      console.error("Caught null or undefined")
-    }
-
-    Deno.exit(1)
+    return e != null
+      ? e.toString()
+      : "Caught null or undefined"
   })
-}
-
-export function attend(page: Page): ResultAsync<void, string> {
-  const task = async () => {
-    await page.goto(TIMESTAMP_URL, {waitUntil: "domcontentloaded"})
-    const workingStatus = await page.$("#working_status").then(elem => elem?.getProperty("textContent") as string | undefined)
-
-    if (workingStatus !== "未出勤") {
-      throw new Error("勤務中です。出勤することはできません。")
-    }
-
-    await page.click("#adit-button-work-start")
-  }
-
-  return ResultAsync.fromPromise(task(), e => {
-    page.browser().close()
-
-    if (e != null) {
-      return e.toString()
-    } else {
-      return "Caught null or undefined"
-    }
-  }).map(() => page.browser().close())
 }
